@@ -1,31 +1,22 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
-name: Deploy to Dev
+name: DEPLOY - DEV
 
 on:
   push:
-    branches: [ "dev" ]
-
-permissions:
-  contents: read
+    branches:
+      - dev
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 17
+      - name: checkout
+        uses: actions/checkout@master
+
+      - name: Set up Java
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'temurin'
+          java-version: ${{ matrix.java-version }}
+          distribution: 'corretto'
 
       - name: Cache Gradle packages
         uses: actions/cache@v2
@@ -39,44 +30,33 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Make env
-        run: |
-          touch ./.env
-          echo "$ENV_DEV" > ./.env
-        env:
-          ENV_DEV: ${{ secrets.ENV_DEV }}
-
       - name: Build with Gradle
         run: ./gradlew build -x test
 
-      - name: create remote directory
-        uses: appleboy/ssh-action@master
+      - name: Docker meta
+        id: docker_meta
+        uses: crazy-max/ghaction-docker-meta@v1
         with:
-          host: ${{ secrets.HOST_DEV }}
-          username: ubuntu
-          key: ${{ secrets.KEY_DEV }}
-          script: mkdir -p ~/srv/ubuntu
+          images: sanghoonjeong/activeminds-backend-dev
+          tag-semver: |
+            {{version}}
+            {{major}}.{{minor}}
 
-      - name: copy source via ssh key
-        uses: burnett01/rsync-deployments@4.1
-        with:
-          switches: -avzr --delete
-          remote_path: ~/srv/ubuntu
-          remote_host: ${{ secrets.HOST_DEV }}
-          remote_user: ubuntu
-          remote_key: ${{ secrets.KEY_DEV }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-      - name: executing remote ssh commands using password
-        uses: appleboy/ssh-action@master
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
         with:
-          host: ${{ secrets.HOST_DEV }}
-          username: ubuntu
-          key: ${{ secrets.KEY_DEV }}
-          script: |
-            sh ~/srv/ubuntu/config/scripts/deploy.sh
-            
-            sudo docker stop $(sudo docker ps -a -q)
-            sudo docker rm $(sudo docker ps -a -q)
-            sudo docker rmi $(sudo docker images -q)
-            sudo docker-compose -f ~/srv/ubuntu/docker-compose.yml pull
-            sudo docker-compose -f ~/srv/ubuntu/docker-compose.yml up --build -d
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Docker build & push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile.prod
+          platforms: linux/amd64
+          push: true
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          labels: ${{ steps.docker_meta.outputs.labels }}
