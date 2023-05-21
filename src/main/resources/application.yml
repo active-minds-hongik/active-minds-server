@@ -37,6 +37,14 @@ spring:
         database-platform: org.hibernate.dialect.MySQL8Dialect
         default_batch_fetch_size: 100
 
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connectTimeout: 5000
+            readTimeout: 5000
+
 ## TODO : 세부 설정 dev, prod 나누기
 ---
 # dev
