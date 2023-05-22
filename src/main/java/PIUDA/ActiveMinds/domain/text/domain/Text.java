@@ -14,18 +14,18 @@ import lombok.Setter;
 public class Text {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @Column(nullable = false)
     private String document;
 
     @Column(nullable = false)
-    private String label;
+    private Boolean label;
 
 
 
     @Builder
-    public Text(Long id, String document,String label){
+    public Text(String id, String document,Boolean label){
         this.id =id;
         this.document=document;
         this.label=label;
