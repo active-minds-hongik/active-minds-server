@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TextRepository extends JpaRepository<Text, Long> {
 
-    @Query(value = "SELECT * FROM text_entity ORDER BY RAND() LIMIT 10", nativeQuery = true)
+    @Query(value = "SELECT t FROM Text t ORDER BY RAND(seed) LIMIT 10")
     List<Text> getRandomTexts();
 
 
