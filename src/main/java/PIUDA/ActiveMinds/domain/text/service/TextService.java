@@ -14,15 +14,16 @@ import java.util.List;
 public class TextService {
     private final TextRepository textRepository;
 
-    public List<GetTextDTO> getText(){
+    public List<GetTextDTO> getText() {
         List<Text> randomTexts = textRepository.getRandomTexts();
         List<GetTextDTO> getTextDTOS = new ArrayList<>();
 
-        for (Text text: randomTexts){
-            GetTextDTO getTextDTO = new GetTextDTO();
-            getTextDTO.setId(text.getId());
-            getTextDTO.setDocument(text.getDocument());
-            getTextDTO.setLabel(text.getLabel());
+        for (Text text : randomTexts) {
+            GetTextDTO getTextDTO = GetTextDTO.builder()
+                    .id(text.getId())
+                    .document(text.getDocument())
+                    .label(text.getLabel())
+                    .build();
             getTextDTOS.add(getTextDTO);
         }
 
