@@ -18,12 +18,12 @@ public class Text {
     private String document;
 
     @Column(nullable = false)
-    private Boolean label;
+    private String label;
 
 
 
     @Builder
-    public Text(String id, String document,Boolean label){
+    public Text(String id, String document,String label){
         this.id =id;
         this.document=document;
         this.label=label;
