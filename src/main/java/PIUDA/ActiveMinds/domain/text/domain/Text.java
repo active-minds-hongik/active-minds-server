@@ -1,9 +1,6 @@
 package PIUDA.ActiveMinds.domain.text.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "Texts")
 public class Text {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @NotNull
