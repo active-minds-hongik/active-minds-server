@@ -1,10 +1,13 @@
 package PIUDA.ActiveMinds.domain.text.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
@@ -14,13 +17,11 @@ public class Text {
     @Id
     private String id;
 
-    @Column(nullable = false)
+    @NotNull
     private String document;
 
-    @Column(nullable = false)
+    @NotNull
     private String label;
-
-
 
     @Builder
     public Text(String id, String document,String label){

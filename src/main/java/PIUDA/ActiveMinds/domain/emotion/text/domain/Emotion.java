@@ -1,9 +1,7 @@
-package PIUDA.ActiveMinds.domain.text.domain;
+package PIUDA.ActiveMinds.domain.emotion.text.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,15 +10,16 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class Emotion {
-
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotNull
     private Integer emotionNum;
-    @Column(nullable = false)
-    private String pixels;
 
+    @NotNull
+    @Column(columnDefinition = "TEXT")
+    private String pixels;
 
     @Builder
     public Emotion(Long id, Integer emotionNum,String pixels){

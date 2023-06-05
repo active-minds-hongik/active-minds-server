@@ -1,11 +1,9 @@
-package PIUDA.ActiveMinds.domain.text.service;
+package PIUDA.ActiveMinds.domain.emotion.text.service;
 
 
-import PIUDA.ActiveMinds.domain.text.domain.Emotion;
-import PIUDA.ActiveMinds.domain.text.domain.Text;
-import PIUDA.ActiveMinds.domain.text.dto.GetEmotionDTO;
-import PIUDA.ActiveMinds.domain.text.dto.GetTextDTO;
-import PIUDA.ActiveMinds.domain.text.repository.EmotionRepository;
+import PIUDA.ActiveMinds.domain.emotion.text.domain.Emotion;
+import PIUDA.ActiveMinds.domain.emotion.text.dto.GetEmotionDTO;
+import PIUDA.ActiveMinds.domain.emotion.text.repository.EmotionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +13,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class EmotionService {
+    private final EmotionRepository emotionRepository;
 
-    EmotionRepository emotionRepository;
     public List<GetEmotionDTO> getEmotions() {
         List<Emotion> randomEmotions = emotionRepository.getRandomEmotions();
         List<GetEmotionDTO> getEmotionDTOS = new ArrayList<>();

@@ -1,7 +1,7 @@
-package PIUDA.ActiveMinds.domain.text.repository;
+package PIUDA.ActiveMinds.domain.emotion.text.repository;
 
 
-import PIUDA.ActiveMinds.domain.text.domain.Emotion;
+import PIUDA.ActiveMinds.domain.emotion.text.domain.Emotion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -1,6 +1,5 @@
-package PIUDA.ActiveMinds.domain.text.dto;
+package PIUDA.ActiveMinds.domain.emotion.text.dto;
 
-import PIUDA.ActiveMinds.domain.text.domain.Emotion;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
