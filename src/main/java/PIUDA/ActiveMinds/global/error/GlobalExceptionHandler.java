@@ -11,8 +11,10 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Slf4j
@@ -40,6 +42,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         final ErrorResponse errorResponse = ErrorResponse.of(errorReason);
         return ResponseEntity.status(HttpStatus.valueOf(errorReason.getStatus()))
                 .body(errorResponse);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    protected ResponseEntity<ErrorResponse> handleMaxUploadSizeExceededException(
+            MaxUploadSizeExceededException e,
+            HttpServletRequest request) {
+        log.error("MaxUploadSizeExceededException", e);
+        final GlobalErrorCode globalErrorCode = GlobalErrorCode.MULTIPART_SIZE_EXCEED;
+        final ErrorReason errorReason = globalErrorCode.getErrorReason();
+        final ErrorResponse errorResponse = ErrorResponse.of(errorReason);
+        return ResponseEntity.status(BAD_REQUEST).body(errorResponse);
     }
 
     // 위에서 따로 처리하지 않은 에러를 모두 처리해줍니다.
